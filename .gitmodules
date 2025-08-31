@@ -1,3 +1,3 @@
 [submodule "queenzz-v10"]
     path = queenzz-v10
-    url = https://<queenzzapp-creator>:${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}@github.com/queenzzapp-creator/queenzz-v10.git
+    url = https://queenzzapp-creator:${GITHUB_TOKEN}@github.com/queenzzapp-creator/queenzz-v10.git
