@@ -1,0 +1,25 @@
+
+{
+  "name": "QUEENZZ",
+  "short_name": "QUEENZZ",
+  "description": "Tu centro de mando para crear tests de oposición. Genera desde texto, archivos, o búquedas web. Organiza con un planificador de estudio, memoriza con un ayudante mnemotécnico visual, y personaliza tu interfaz. Creado con la potencia de Google Gemini.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F1",
+  "theme_color": "#65a30d",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
