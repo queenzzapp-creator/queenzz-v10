@@ -1,0 +1,21 @@
+import React from "react";
+import netlifyIdentity from "netlify-identity-widget";
+
+netlifyIdentity.init();
+
+function App() {
+  // Función opcional para abrir el popup de login/registro
+  const handleLogin = () => {
+    netlifyIdentity.open();
+  };
+
+  return (
+    <div>
+      <h1>Bienvenid@ a mi App</h1>
+      <button onClick={handleLogin}>Iniciar sesión / Registrarse</button>
+      {/* El resto de tu app aquí */}
+    </div>
+  );
+}
+
+export default App;

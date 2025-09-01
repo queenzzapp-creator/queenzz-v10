@@ -47,6 +47,7 @@ import QuestionEditorModal from './components/QuestionEditorModal.tsx';
 import MoveQuestionsModal from './components/MoveQuestionsModal.tsx';
 import HelpModal from './components/HelpModal.tsx';
 import QuizDetailsView from './components/QuizDetailsView.tsx';
+import LoginScreen from './components/LoginScreen.tsx';
 
 // --- Type definition for duplicate resolution promise ---
 interface DuplicateResolutionData {
@@ -239,9 +240,10 @@ const getAllQuizzesFromFolder = (folder: Folder): SavedQuiz[] => {
 
 
 const App: React.FC = () => {
-  const [appState, setAppState] = useState<AppState>(AppState.VIEWING_LIBRARY);
+  const [appState, setAppState] = useState<AppState>(AppState.LOGIN);
   const [previousAppState, setPreviousAppState] = useState<AppState | null>(null);
   const [isMigrating, setIsMigrating] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [settings, setSettings] = useState<Settings>(settingsService.getSettings());
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -441,6 +443,11 @@ const App: React.FC = () => {
   const setNavState = (newState: AppState) => { setPreviousAppState(appState); setAppState(newState); };
   const handleBack = () => { setAppState(previousAppState || AppState.VIEWING_LIBRARY); setPreviousAppState(null); };
   const handleResetToLibrary = () => { setAppState(AppState.VIEWING_LIBRARY); setCurrentQuiz(null); setActiveQuestions(null); setUserAnswers(null); setCurrentQuestionIndex(0); setPreviousAppState(null); };
+  
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    setAppState(AppState.VIEWING_LIBRARY);
+  };
   
   const handleSaveSettings = (newSettings: Settings) => { setSettings(newSettings); settingsService.saveSettings(newSettings); };
   
@@ -1433,6 +1440,11 @@ const isMonthlyAvailable = useMemo(() => {
 
 
   const renderContent = () => {
+    // Mostrar pantalla de login si no está autenticado
+    if (appState === AppState.LOGIN) {
+      return <LoginScreen onLogin={handleLogin} />;
+    }
+    
     if (appState === AppState.GENERATING || isMigrating) {
         return <Loader message={loaderMessage} />;
     }
@@ -1716,6 +1728,18 @@ const isMonthlyAvailable = useMemo(() => {
                     <SyncStatusIndicator status={syncStatus} onSave={handleManualSave} />
                     <button onClick={() => setIsSettingsOpen(true)} className="p-2.5 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors" title="Ajustes">
                         <Cog6ToothIcon className="h-6 w-6" />
+                    </button>
+                    <button 
+                        onClick={() => {
+                            setIsAuthenticated(false);
+                            setAppState(AppState.LOGIN);
+                        }} 
+                        className="p-2.5 rounded-full text-slate-500 dark:text-slate-400 hover:bg-red-200 dark:hover:bg-red-800 transition-colors" 
+                        title="Cerrar Sesión"
+                    >
+                        <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
                     </button>
                 </div>
             </div>

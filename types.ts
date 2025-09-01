@@ -299,6 +299,7 @@ export type QuizDifficulty = 'Fácil' | 'Medio' | 'Difícil';
 
 
 export enum AppState {
+  LOGIN = 'LOGIN',
   GENERATING = 'GENERATING',
   CONFIGURING_QUIZ_START = 'CONFIGURING_QUIZ_START',
   TAKING_QUIZ = 'TAKING_QUIZ',
