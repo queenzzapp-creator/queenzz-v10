@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppLogoIcon } from './Icons.tsx';
 
 interface LoginScreenProps {
@@ -9,8 +9,25 @@ interface LoginScreenProps {
 const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  // Cargar credenciales guardadas al iniciar
+  useEffect(() => {
+    const savedCredentials = localStorage.getItem('queenzz_credentials');
+    if (savedCredentials) {
+      try {
+        const { username: savedUsername, password: savedPassword } = JSON.parse(savedCredentials);
+        setUsername(savedUsername);
+        setPassword(savedPassword);
+        setRememberMe(true);
+      } catch (e) {
+        console.error('Error al cargar credenciales guardadas:', e);
+        localStorage.removeItem('queenzz_credentials');
+      }
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +39,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
     // Verificar las credenciales
     if (username === 'Mostri' && password === '1234mn') {
+      // Guardar credenciales si "Recordarme" está marcado
+      if (rememberMe) {
+        localStorage.setItem('queenzz_credentials', JSON.stringify({ username, password }));
+      } else {
+        localStorage.removeItem('queenzz_credentials');
+      }
+      
       setIsLoading(false);
       onLogin();
     } else {
@@ -31,7 +55,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         {/* Logo y título */}
         <div className="text-center">
@@ -60,8 +84,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors"
-                placeholder="Ingresa tu usuario"
+                className="w-full px-3 py-3 bg-yellow-50 dark:bg-yellow-900/20 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors"
+                placeholder=""
                 disabled={isLoading}
               />
             </div>
@@ -77,10 +101,24 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors"
-                placeholder="Ingresa tu contraseña"
+                className="w-full px-3 py-3 bg-yellow-50 dark:bg-yellow-900/20 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 transition-colors"
+                placeholder=""
                 disabled={isLoading}
               />
+            </div>
+
+            <div className="flex items-center">
+              <input
+                id="remember-me"
+                name="remember-me"
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 dark:border-gray-600 rounded"
+              />
+              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                Recordarme
+              </label>
             </div>
 
             {error && (
@@ -92,7 +130,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105"
             >
               {isLoading ? (
                 <div className="flex items-center">
