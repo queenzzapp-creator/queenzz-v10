@@ -447,6 +447,7 @@ const App: React.FC = () => {
   const handleLogin = () => {
     setIsAuthenticated(true);
     setAppState(AppState.VIEWING_LIBRARY);
+    setPreviousAppState(null);
   };
   
   const handleSaveSettings = (newSettings: Settings) => { setSettings(newSettings); settingsService.saveSettings(newSettings); };
@@ -1441,7 +1442,7 @@ const isMonthlyAvailable = useMemo(() => {
 
   const renderContent = () => {
     // Mostrar pantalla de login si no está autenticado
-    if (appState === AppState.LOGIN) {
+    if (!isAuthenticated) {
       return <LoginScreen onLogin={handleLogin} />;
     }
     
@@ -1677,6 +1678,11 @@ const isMonthlyAvailable = useMemo(() => {
             );
     }
   };
+
+  // Si no está autenticado, solo mostrar el contenido del login
+  if (!isAuthenticated) {
+    return renderContent();
+  }
 
   if (!appData || !activeLibrary) {
       return <Loader message={isMigrating ? loaderMessage : "Cargando biblioteca..."} />;
